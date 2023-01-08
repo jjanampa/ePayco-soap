@@ -50,14 +50,4 @@ class User extends Authenticatable implements Wallet, WalletFloat, Customer
         'email_verified_at' => 'datetime',
     ];
 
-    /**
-     * @var string
-     */
-    public $first_name;
-
-    /**
-     * @var string
-     */
-    public $last_name;
-
 }

@@ -4,6 +4,8 @@ namespace App\Soap;
 
 use App\Data\ResponseData;
 use App\Models\User;
+use Bavix\Wallet\Objects\Cart;
+use Bavix\Wallet\Test\Infra\Models\Item;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -93,6 +95,8 @@ class WalletSoap
      */
     public function confirmPay(string $orderId, string $token): ResponseData
     {
+        Item::all();
+        Cart::class;
 
         return new ResponseData(true, '00', __('mensaje del error'), ['aqui' => 'ddd']);
     }
