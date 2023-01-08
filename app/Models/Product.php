@@ -5,17 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Order extends Model
+class Product extends Model
 {
     use HasFactory;
 
     protected $fillable = [
 
     ];
-
-    public function products()
-    {
-        return $this->belongsToMany(Product::class)->withPivot('quantity');
-    }
 
 }

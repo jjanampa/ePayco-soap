@@ -50,4 +50,9 @@ class User extends Authenticatable implements Wallet, WalletFloat, Customer
         'email_verified_at' => 'datetime',
     ];
 
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
 }

@@ -77,10 +77,10 @@ class WalletSoap
     }
 
     /**
-     * @param string $orderId
+     * @param array $products
      * @return ResponseData
      */
-    public function pay(string $orderId): ResponseData
+    public function pay(array $products): ResponseData
     {
 
         return new ResponseData(true, '00', __('mensaje del error'), ['name' => 'juan', 'email' => 'juan@test.com']);
@@ -95,9 +95,6 @@ class WalletSoap
      */
     public function confirmPay(string $orderId, string $token): ResponseData
     {
-        Item::all();
-        Cart::class;
-
         return new ResponseData(true, '00', __('mensaje del error'), ['aqui' => 'ddd']);
     }
 
