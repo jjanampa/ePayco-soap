@@ -6,17 +6,16 @@ use App\Data\ResponseData;
 use App\Models\User;
 use App\Notifications\ConfirmPaymentNotification;
 use Bavix\Wallet\Models\Transaction;
-use Bavix\Wallet\Objects\Cart;
-use Bavix\Wallet\Test\Infra\Models\Item;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Password;
 
 class WalletSoap
 {
 
     /**
+     * register Customer
+     *
      * @param string $nroDocument
      * @param string $name
      * @param string $email
@@ -47,7 +46,7 @@ class WalletSoap
     }
 
     /**
-     * otro ejemplo
+     * Wallet Recharge
      *
      * @param string $nroDocument
      * @param string $cellphone
@@ -80,6 +79,8 @@ class WalletSoap
     }
 
     /**
+     * Pay
+     *
      * @param string $nroDocument
      * @param string $cellphone
      * @param float $amount
@@ -116,6 +117,8 @@ class WalletSoap
     }
 
     /**
+     * Confirm Pay
+     *
      * @param string $sessionId
      * @param string $token
      * @return ResponseData
@@ -151,7 +154,7 @@ class WalletSoap
     }
 
     /**
-     * xxxxxxxxxxxxxxxxxxxxx
+     * Check Balance
      *
      * @param string $nroDocument
      * @param string $cellphone

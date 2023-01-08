@@ -2,9 +2,7 @@
 
 namespace App\Data;
 
-use Spatie\LaravelData\Data;
-
-class ResponseData extends Data
+class ResponseData
 {
     /**
      * @var bool

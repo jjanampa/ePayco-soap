@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Data\ResponseData;
-use App\Data\UserData;
 use App\Soap\WalletSoap;
 
 class WalletController extends \KDuma\SoapServer\AbstractSoapServerController
@@ -26,7 +25,6 @@ class WalletController extends \KDuma\SoapServer\AbstractSoapServerController
     protected function getClassmap(): array
     {
         return [
-            'UserData' => UserData::class,
             'ResponseData' => ResponseData::class,
         ];
     }
