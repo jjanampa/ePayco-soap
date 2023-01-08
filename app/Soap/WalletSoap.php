@@ -4,11 +4,14 @@ namespace App\Soap;
 
 use App\Data\ResponseData;
 use App\Models\User;
+use App\Notifications\ConfirmPaymentNotification;
+use Bavix\Wallet\Models\Transaction;
 use Bavix\Wallet\Objects\Cart;
 use Bavix\Wallet\Test\Infra\Models\Item;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Password;
 
 class WalletSoap
 {
@@ -77,25 +80,74 @@ class WalletSoap
     }
 
     /**
-     * @param array $products
+     * @param string $nroDocument
+     * @param string $cellphone
+     * @param float $amount
      * @return ResponseData
      */
-    public function pay(array $products): ResponseData
+    public function pay(string $nroDocument, string $cellphone, float $amount): ResponseData
     {
+        $params = get_defined_vars();
+        try {
+            $validator = Validator::make($params, [
+                'nroDocument' => 'required',
+                'cellphone' => 'required',
+                'amount' => 'required|numeric|between:0,9999999999.99'
+            ]);
+            if ($validator->fails()) {
+                return new ResponseData(false, '01', $validator->errors()->first(), []);
+            }
 
-        return new ResponseData(true, '00', __('mensaje del error'), ['name' => 'juan', 'email' => 'juan@test.com']);
+            $user = User::where('nroDocument', $nroDocument)->where('cellphone', $cellphone)->first();
+            if (!$user) {
+                return new ResponseData(false, '01', __('There is no user related to the data entered'), []);
+            }
+            $token = Str::random(6);
+            $transaction = $user->withdrawFloat($amount, null, false);
+            $transaction->token = $token;
+            $transaction->save();
+
+            $user->notify(new ConfirmPaymentNotification($transaction));
+
+            return new ResponseData(true, '00', '', ['sessionId' => $transaction->uuid, 'token' => $token]);
+        } catch (\Exception $e) {
+            return new ResponseData(false, '01', $e->getMessage(), []);
+        }
     }
 
     /**
-     * xxxxxxxxxxxxxx
-     *
-     * @param string $orderId
+     * @param string $sessionId
      * @param string $token
      * @return ResponseData
      */
-    public function confirmPay(string $orderId, string $token): ResponseData
+    public function confirmPay(string $sessionId, string $token): ResponseData
     {
-        return new ResponseData(true, '00', __('mensaje del error'), ['aqui' => 'ddd']);
+        $params = get_defined_vars();
+        try {
+            $validator = Validator::make($params, [
+                'sessionId' => 'required',
+                'token' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return new ResponseData(false, '01', $validator->errors()->first(), []);
+            }
+
+            $transaction = Transaction::where('uuid', $sessionId)->where('token', $token)->first();
+            if (!$transaction) {
+                return new ResponseData(false, '01', __('There is no payment related to the data entered'), []);
+            }
+
+            $user = $transaction->payable;
+            if (!$user) {
+                return new ResponseData(false, '01', __('There is no user related to the data entered'), []);
+            }
+
+            $user->confirm($transaction);
+
+            return new ResponseData(true, '00', '', ['sessionId' => $transaction->uuid]);
+        } catch (\Exception $e) {
+            return new ResponseData(false, '01', $e->getMessage(), []);
+        }
     }
 
     /**

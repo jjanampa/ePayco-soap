@@ -19,5 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::name('my_soap_server.wsdl')->get('/soap5.wsdl', [WalletController::class, 'wsdlProvider']);
-Route::name('my_soap_server')->post('/soap5', [WalletController::class, 'soapServer']);
+Route::name('my_soap_server.wsdl')->get('/soap7.wsdl', [WalletController::class, 'wsdlProvider']);
+Route::name('my_soap_server')->post('/soap7', [WalletController::class, 'soapServer']);

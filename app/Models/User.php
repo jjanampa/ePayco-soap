@@ -13,10 +13,12 @@ use Bavix\Wallet\Traits\HasWallet;
 use Bavix\Wallet\Interfaces\Wallet;
 use Bavix\Wallet\Traits\CanPay;
 use Bavix\Wallet\Interfaces\Customer;
+use Bavix\Wallet\Interfaces\Confirmable;
+use Bavix\Wallet\Traits\CanConfirm;
 
-class User extends Authenticatable implements Wallet, WalletFloat, Customer
+class User extends Authenticatable implements Wallet, WalletFloat, Customer, Confirmable
 {
-    use HasApiTokens, HasFactory, Notifiable,  HasWalletFloat, CanPay;
+    use HasApiTokens, HasFactory, Notifiable,  HasWallet, HasWalletFloat, CanPay, CanConfirm;
 
     /**
      * The attributes that are mass assignable.
@@ -49,10 +51,5 @@ class User extends Authenticatable implements Wallet, WalletFloat, Customer
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
-    }
 
 }
